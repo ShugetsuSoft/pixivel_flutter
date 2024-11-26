@@ -82,7 +82,9 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
             child: Text(
               _illust!.altTitle,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Colors.white54,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white54
+                        : Colors.black54,
                   ),
             ),
           ),
@@ -100,10 +102,14 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                 margin: Margins.zero,
                 padding: HtmlPaddings.zero,
                 fontSize: FontSize(14),
-                color: Colors.white70,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white70
+                    : Colors.black87,
               ),
               "a": Style(
-                color: Colors.blue,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.blue
+                    : Colors.blue,
                 textDecoration: TextDecoration.none,
               ),
             },
@@ -124,44 +130,67 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         backgroundColor: Colors.grey[900],
-                        title: const Text(
+                        title: Text(
                           '一个外部链接',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
+                          ),
                         ),
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               '你正在打开一个外部链接:',
-                              style: TextStyle(color: Colors.white70),
+                              style: TextStyle(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white70
+                                    : Colors.black87,
+                              ),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               uri.toString(),
-                              style: const TextStyle(
-                                color: Colors.blue,
+                              style: TextStyle(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.blue
+                                    : Colors.blue,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
+                            Text(
                               '真的要继续吗？我可无法继续保护主人的安全了',
-                              style: TextStyle(color: Colors.white70),
+                              style: TextStyle(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white70
+                                    : Colors.black87,
+                              ),
                             ),
                           ],
                         ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text(
+                            child: Text(
                               'Cancel',
-                              style: TextStyle(color: Colors.white70),
+                              style: TextStyle(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white70
+                                    : Colors.black87,
+                              ),
                             ),
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text('Open'),
+                            child: Text('Open'),
                           ),
                         ],
                       );
@@ -192,16 +221,22 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                       children: [
                         Text(
                           tag.name,
-                          style: const TextStyle(
-                            color: Colors.white70,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white70
+                                    : Colors.black87,
                             fontSize: 12,
                           ),
                         ),
                         if (tag.translation.isNotEmpty)
                           Text(
                             tag.translation,
-                            style: const TextStyle(
-                              color: Colors.white54,
+                            style: TextStyle(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white54
+                                  : Colors.black54,
                               fontSize: 10,
                               height: 1.2,
                             ),
@@ -211,7 +246,11 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                   ),
                 ),
                 backgroundColor: Colors.transparent,
-                side: const BorderSide(color: Colors.white24),
+                side: BorderSide(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white24
+                      : Colors.black26,
+                ),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 onPressed: () {
                   Navigator.push(
@@ -244,7 +283,9 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
             const Spacer(),
             IconButton(
               icon: const Icon(Icons.download),
-              color: Colors.white70,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white70
+                  : Colors.black87,
               onPressed: _downloadImage,
               tooltip: '下载当前图片',
             ),
@@ -257,7 +298,9 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
             return '发布于 ${date.year}年${date.month}月${date.day}日';
           }(),
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.white54,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white54
+                    : Colors.black54,
               ),
         ),
         const SizedBox(height: 16),
@@ -284,7 +327,9 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white.withOpacity(0.05)
+                      : Colors.black.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -303,10 +348,13 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: const Color(0xFF1F1F1F),
-                            child: const Center(
+                            child: Center(
                               child: CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white70,
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white70
+                                      : Colors.black87,
                                 ),
                               ),
                             ),
@@ -339,7 +387,10 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                                   .textTheme
                                   .bodySmall
                                   ?.copyWith(
-                                    color: Colors.white54,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white54
+                                        : Colors.black54,
                                   ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -356,7 +407,9 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.black.withOpacity(0.05),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Row(
@@ -480,10 +533,13 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
                             color: const Color(0xFF1F1F1F),
-                            child: const Center(
+                            child: Center(
                               child: CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  Colors.white70,
+                                  Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white70
+                                      : Colors.black87,
                                 ),
                               ),
                             ),
@@ -498,16 +554,6 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                         bottom: 0,
                         child: Container(
                           padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.transparent,
-                                Colors.black.withOpacity(0.7),
-                              ],
-                            ),
-                          ),
                           child: Text(
                             illust.title,
                             style: const TextStyle(
@@ -601,7 +647,10 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 12, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.black45,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white.withOpacity(0.05)
+                                    : Colors.black.withOpacity(0.05),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -610,7 +659,10 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                                 .textTheme
                                 .bodyMedium
                                 ?.copyWith(
-                                  color: Colors.white70,
+                                  color: Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white70
+                                      : Colors.black87,
                                 ),
                           ),
                         ),
@@ -621,17 +673,24 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                               if (_currentPage > 0)
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.black45,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white.withOpacity(0.05)
+                                        : Colors.black.withOpacity(0.05),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: TextButton(
                                     onPressed: () {
                                       _carouselController.previousPage();
                                     },
-                                    child: const Text(
+                                    child: Text(
                                       'PREV',
                                       style: TextStyle(
-                                        color: Colors.white70,
+                                        fontSize: 14,
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white70
+                                            : Colors.black87,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -643,17 +702,24 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                               if (_currentPage < _illust!.pageCount - 1)
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.black45,
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white.withOpacity(0.05)
+                                        : Colors.black.withOpacity(0.05),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: TextButton(
                                     onPressed: () {
                                       _carouselController.nextPage();
                                     },
-                                    child: const Text(
+                                    child: Text(
                                       'NEXT',
                                       style: TextStyle(
-                                        color: Colors.white70,
+                                        fontSize: 14,
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? Colors.white70
+                                            : Colors.black87,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -1005,7 +1071,9 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.white.withOpacity(0.05)
+            : Colors.black.withOpacity(0.05),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Row(
@@ -1013,13 +1081,17 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
           Icon(
             icon,
             size: 16,
-            color: Colors.white70,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.white70
+                : Colors.black87,
           ),
           const SizedBox(width: 4),
           Text(
             value,
-            style: const TextStyle(
-              color: Colors.white70,
+            style: TextStyle(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white70
+                  : Colors.black87,
               fontSize: 12,
             ),
           ),
@@ -1036,14 +1108,16 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             '推荐插画',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.black,
             ),
           ),
         ),
@@ -1131,9 +1205,12 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                             child: IconButton(
                               onPressed: () => Navigator.pop(context),
                               iconSize: 24,
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.arrow_back,
-                                color: Colors.white,
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                               ),
                             ),
                           ),
@@ -1148,9 +1225,12 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                                     true);
                               },
                               iconSize: 24,
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.close,
-                                color: Colors.white,
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black,
                               ),
                             ),
                           ),

@@ -129,8 +129,14 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
                                     colors: [
-                                      Colors.black.withOpacity(0.2),
-                                      Colors.black.withOpacity(0.6),
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.black.withOpacity(0.2)
+                                          : Colors.white.withOpacity(0.2),
+                                      Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.black.withOpacity(0.6)
+                                          : Colors.white.withOpacity(0.6),
                                     ],
                                   ),
                                 ),
@@ -146,12 +152,27 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => Scaffold(
-                                        backgroundColor: Colors.black,
+                                        backgroundColor:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.dark
+                                                ? Colors.black
+                                                : Colors.white,
                                         appBar: AppBar(
-                                          backgroundColor: Colors.black26,
+                                          backgroundColor:
+                                              Theme.of(context).brightness ==
+                                                      Brightness.dark
+                                                  ? Colors.black26
+                                                  : Colors.white24,
                                           elevation: 0,
                                           leading: IconButton(
-                                            icon: const Icon(Icons.close),
+                                            icon: Icon(
+                                              Icons.close,
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.dark
+                                                  ? Colors.white
+                                                  : Colors.black,
+                                            ),
                                             onPressed: () =>
                                                 Navigator.pop(context),
                                           ),
@@ -194,7 +215,7 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
                                       _user!.id,
                                     ),
                                     fit: BoxFit.cover,
-                                    height: 160,
+                                    height: 360,
                                     width: double.infinity,
                                   ),
                                 ),
@@ -204,6 +225,10 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
                         ),
                       );
                     },
+                  )
+                else
+                  const SizedBox(
+                    height: 80,
                   ),
                 Transform.translate(
                   offset: const Offset(0, -40),
@@ -229,7 +254,10 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
                               height: 80,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => Container(
-                                color: Colors.grey[800],
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.grey[800]
+                                    : Colors.grey[200],
                               ),
                               errorWidget: (context, url, error) =>
                                   const Icon(Icons.error),
@@ -255,7 +283,10 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
                           margin: const EdgeInsets.symmetric(horizontal: 24),
                           height: 80,
                           decoration: BoxDecoration(
-                            color: Colors.grey[900]?.withOpacity(0.3),
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.grey[900]?.withOpacity(0.3)
+                                    : Colors.grey[300]?.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: SingleChildScrollView(
@@ -263,7 +294,10 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
                             child: Text(
                               _user!.bio,
                               style: TextStyle(
-                                color: Colors.grey[400],
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.grey[400]
+                                    : Colors.grey[700],
                                 height: 1.5,
                               ),
                               textAlign: TextAlign.center,
@@ -308,9 +342,11 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
                       child: IconButton(
                         onPressed: () => Navigator.pop(context),
                         iconSize: 24,
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_back,
-                          color: Colors.white,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                         ),
                       ),
                     ),
@@ -323,9 +359,11 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
                               .popUntil((route) => route.isFirst);
                         },
                         iconSize: 24,
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.close,
-                          color: Colors.white,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
                         ),
                       ),
                     ),
