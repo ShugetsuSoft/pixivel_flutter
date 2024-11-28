@@ -15,7 +15,6 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:universal_platform/universal_platform.dart';
 import 'package:gal/gal.dart';
-
 import '../models/illust.dart';
 import '../services/api_service.dart';
 import '../widgets/shimmer_loading.dart';
@@ -23,6 +22,7 @@ import 'full_screen_image_viewer.dart';
 import '../models/api_response.dart';
 import 'illustrator_profile_page.dart';
 import 'search_page.dart';
+import '../utils/download.dart' as download_util;
 
 class IllustDetailPage extends StatefulWidget {
   final Illust? illust;
@@ -884,6 +884,13 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
           _illust = response.data;
         });
       }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('加载作品失败: ${e.toString()}')),
+        );
+        Navigator.pop(context);
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -1004,28 +1011,74 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
       }
 
       if (UniversalPlatform.isAndroid || UniversalPlatform.isIOS) {
-        var status = await Permission.photos.request();
-        if (!status.isGranted) {
-          if (mounted) {
-            Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('需要相册权限来保存图片')),
-            );
+        // Request photos permission
+        Permission permission;
+        if (UniversalPlatform.isAndroid) {
+          // Check if Android SDK version is 33 or higher
+          final sdkVersion =
+              int.tryParse(Platform.version.split('.').first) ?? 0;
+          if (sdkVersion >= 33) {
+            permission = Permission.photos;
+          } else {
+            permission = Permission.storage;
           }
-          return;
+        } else {
+          permission = Permission.photos;
         }
 
-        // Save to gallery using Gal
-        await Gal.putImageBytes(Uint8List.fromList(response.data!),
-            name: 'pixivel_${_illust!.id}_p$_currentPage.$fileExtension');
+        var status = await permission.request();
+        if (!status.isGranted) {
+          if (!await permission.request().isGranted) {
+            if (mounted) {
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('需要相册权限来保存图片')),
+              );
+            }
+            return;
+          }
+        }
 
-        if (!mounted) return;
-        Navigator.of(context).pop();
+        try {
+          // Save to gallery using Gal
+          await Gal.putImageBytes(Uint8List.fromList(response.data!),
+              name: 'pixivel_${_illust!.id}_p$_currentPage.$fileExtension');
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('图片已保存到相册')),
-        );
+          if (!mounted) return;
+          Navigator.of(context).pop();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('图片已保存到相册')),
+          );
+        } catch (e) {
+          if (!mounted) return;
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('保存失败: $e')),
+          );
+        }
+      } else if (UniversalPlatform.isWeb) {
+        // Web platform download implementation
+        try {
+          final fileName =
+              'pixivel_${_illust!.id}_p$_currentPage.$fileExtension';
+          download_util.downloadBytes(
+              Uint8List.fromList(response.data!), fileName);
+
+          if (!mounted) return;
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('开始下载图片')),
+          );
+        } catch (e) {
+          if (!mounted) return;
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('下载失败: $e')),
+          );
+        }
       } else {
+        // Desktop platform download implementation
         final downloadDir = await getDownloadsDirectory();
         if (downloadDir == null) {
           if (mounted) {
@@ -1144,16 +1197,28 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        body: const Center(
           child: CircularProgressIndicator(),
         ),
       );
     }
 
     if (_illust == null) {
-      return const Scaffold(
-        body: Center(
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        body: const Center(
           child: Text('插画加载失败'),
         ),
       );

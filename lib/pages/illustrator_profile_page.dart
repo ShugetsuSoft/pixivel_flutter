@@ -88,8 +88,14 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
   @override
   Widget build(BuildContext context) {
     if (_user == null) {
-      return const Scaffold(
-        body: Center(
+      return Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        body: const Center(
           child: CircularProgressIndicator(),
         ),
       );

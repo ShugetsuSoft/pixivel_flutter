@@ -6,7 +6,7 @@ import '../models/ugoira.dart';
 import '../models/api_response.dart';
 
 class ApiService {
-  static const String _baseUrl = 'https://api.pixivel.art/v3';
+  static const String _baseUrl = 'https://api.pixivel.art:443/v3';
 
   static const Map<String, List<String>> convertList = {
     'original': ['img-original/img/', ''],
@@ -16,7 +16,7 @@ class ApiService {
   };
 
   static const List<String> proxyList = [
-    'https://proxy.pixivel.art/',
+    'https://proxy.pixivel.art:443/',
   ];
 
   static const Map<String, List<String>> rankModes = {

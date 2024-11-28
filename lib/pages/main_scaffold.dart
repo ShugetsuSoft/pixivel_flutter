@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'rank_page.dart';
 import 'search_page.dart';
+import 'id_jump_page.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});
@@ -15,12 +16,11 @@ class _MainScaffoldState extends State<MainScaffold> {
   final List<Widget> _pages = [
     const RankPage(),
     const SearchPage(),
+    const IdJumpPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -41,6 +41,10 @@ class _MainScaffoldState extends State<MainScaffold> {
           NavigationDestination(
             icon: Icon(Icons.search),
             label: '搜索',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.tag),
+            label: 'ID跳转',
           ),
         ],
       ),
