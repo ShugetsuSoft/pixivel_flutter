@@ -1026,18 +1026,7 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
           permission = Permission.photos;
         }
 
-        var status = await permission.request();
-        if (!status.isGranted) {
-          if (!await permission.request().isGranted) {
-            if (mounted) {
-              Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('需要相册权限来保存图片')),
-              );
-            }
-            return;
-          }
-        }
+        await permission.request();
 
         try {
           // Save to gallery using Gal
