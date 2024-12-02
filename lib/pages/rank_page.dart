@@ -22,7 +22,7 @@ class _RankPageState extends State<RankPage> with TickerProviderStateMixin {
   String _errorMessage = '';
 
   String _selectedMode = 'daily';
-  String _selectedContent = 'illust';
+  String _selectedContent = 'all';
   String _selectedDate = '';
 
   @override

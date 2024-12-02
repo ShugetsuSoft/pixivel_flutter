@@ -529,6 +529,7 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                             illust.image,
                             illust.id,
                             isThumb: true,
+                            page: illust.type == 2 ? -1 : 0,
                           ),
                           fit: BoxFit.cover,
                           placeholder: (context, url) => Container(
@@ -752,6 +753,7 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
               imageUrl: _apiService.getImageUrl(
                 _illust!.image,
                 _illust!.id,
+                page: _illust!.type == 2 ? -1 : 0,
               ),
               fit: BoxFit.contain,
               placeholder: (context, url) => Container(
@@ -1151,7 +1153,7 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             '推荐插画',
             style: TextStyle(

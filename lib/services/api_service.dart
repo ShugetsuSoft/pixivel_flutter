@@ -29,15 +29,7 @@ class ApiService {
       'male',
       'female'
     ],
-    'illust': [
-      'daily',
-      'weekly',
-      'monthly',
-      'rookie',
-      'original',
-      'male',
-      'female'
-    ],
+    'illust': ['daily', 'weekly', 'monthly', 'rookie'],
     'manga': ['daily', 'weekly', 'monthly', 'rookie'],
     'ugoira': ['daily', 'weekly'],
   };

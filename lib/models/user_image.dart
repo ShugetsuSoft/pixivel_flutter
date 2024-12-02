@@ -1,6 +1,6 @@
 class UserImage {
   final String url;
-  final String bigUrl;
+  final String? bigUrl;
   final String? background;
 
   UserImage({
@@ -12,7 +12,7 @@ class UserImage {
   factory UserImage.fromJson(Map<String, dynamic> json) {
     return UserImage(
       url: json['url'] as String,
-      bigUrl: json['bigUrl'] as String,
+      bigUrl: json['bigUrl'] as String?,
       background: json['background'] as String?,
     );
   }

@@ -253,7 +253,7 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
                           child: ClipOval(
                             child: CachedNetworkImage(
                               imageUrl: _apiService.getUserImageUrl(
-                                _user!.image.url,
+                                _user!.image.bigUrl ?? _user!.image.url,
                                 _user!.id,
                               ),
                               width: 80,
