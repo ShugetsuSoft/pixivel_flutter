@@ -177,9 +177,9 @@ class _RankPageState extends State<RankPage> with TickerProviderStateMixin {
               onPressed: () async {
                 final DateTime? picked = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now().subtract(const Duration(days: 3)),
+                  initialDate: DateTime.now().subtract(const Duration(days: 2)),
                   firstDate: DateTime(2007, 9, 10),
-                  lastDate: DateTime.now().subtract(const Duration(days: 3)),
+                  lastDate: DateTime.now().subtract(const Duration(days: 2)),
                 );
                 if (picked != null) {
                   setState(() {

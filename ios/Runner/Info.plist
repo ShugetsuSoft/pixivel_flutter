@@ -46,8 +46,17 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>需要访问相册权限以保存图片</string>
+	<string>Pixivel needs access to your photo library to save images you want to keep.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>需要访问相册权限以保存图片</string>
+	<string>Pixivel needs permission to save images to your photo library.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
 </dict>
 </plist>

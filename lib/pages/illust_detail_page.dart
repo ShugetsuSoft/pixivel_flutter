@@ -190,7 +190,7 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(true),
-                            child: Text('Open'),
+                            child: const Text('Open'),
                           ),
                         ],
                       );

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../pages/illust_detail_page.dart';
 import '../pages/illustrator_profile_page.dart';
-import '../models/illust.dart';
 
 class IdJumpDialog extends StatefulWidget {
   const IdJumpDialog({super.key});
