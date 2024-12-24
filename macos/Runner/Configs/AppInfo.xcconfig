@@ -8,7 +8,7 @@
 PRODUCT_NAME = pixivel_flutter
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = dev.shugetsu.pixivelFlutter
+PRODUCT_BUNDLE_IDENTIFIER = dev.shugetsu.pixivel
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2024 dev.shugetsu. All rights reserved.
