@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart' hide CarouselController;
-import 'package:flutter/gestures.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -434,37 +433,13 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
         if (_userIllusts?.illusts != null && _userIllusts!.illusts.isNotEmpty)
           SizedBox(
             height: 120,
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (notification) =>
-                  true, // Prevent scroll from propagating
-              child: MouseRegion(
-                child: Listener(
-                  onPointerSignal: (pointerSignal) {
-                    if (pointerSignal is PointerScrollEvent) {
-                      final delta = pointerSignal.scrollDelta.dy;
-                      _horizontalScrollController.position.moveTo(
-                        _horizontalScrollController.position.pixels + delta,
-                        curve: Curves.linear,
-                      );
-                    }
-                  },
-                  child: Scrollbar(
-                    controller: _horizontalScrollController,
-                    thumbVisibility: true,
-                    trackVisibility: false,
-                    thickness: 8,
-                    radius: const Radius.circular(4),
-                    child: ListView.builder(
-                      controller: _horizontalScrollController,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _userIllusts!.illusts.length,
-                      itemBuilder: (context, index) => _buildUserIllustItem(
-                        _userIllusts!.illusts[index],
-                        index,
-                      ),
-                    ),
-                  ),
-                ),
+            child: ListView.builder(
+              controller: _horizontalScrollController,
+              scrollDirection: Axis.horizontal,
+              itemCount: _userIllusts!.illusts.length,
+              itemBuilder: (context, index) => _buildUserIllustItem(
+                _userIllusts!.illusts[index],
+                index,
               ),
             ),
           )

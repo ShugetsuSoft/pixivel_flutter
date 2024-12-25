@@ -29,7 +29,7 @@ class _RankPageState extends State<RankPage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _selectedDate =
-        _getFormattedDate(DateTime.now().subtract(const Duration(days: 3)));
+        _getFormattedDate(DateTime.now().subtract(const Duration(days: 2)));
     _loadIllusts();
   }
 
@@ -177,7 +177,7 @@ class _RankPageState extends State<RankPage> with TickerProviderStateMixin {
               onPressed: () async {
                 final DateTime? picked = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now().subtract(const Duration(days: 2)),
+                  initialDate: DateTime.parse(_selectedDate),
                   firstDate: DateTime(2007, 9, 10),
                   lastDate: DateTime.now().subtract(const Duration(days: 2)),
                 );

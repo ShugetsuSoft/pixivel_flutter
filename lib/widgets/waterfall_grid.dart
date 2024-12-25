@@ -45,6 +45,7 @@ class WaterfallGrid extends StatelessWidget {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: adjustedPadding),
           child: MasonryGridView.count(
+            padding: EdgeInsets.zero,
             crossAxisCount: columnCount,
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
