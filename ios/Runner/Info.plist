@@ -34,13 +34,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Pixivel needs permission to save images to your photo library.</string>
+	<string>Pixivel 需要权限来保存图片</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Pixivel needs access to your photo library to save images you want to keep.</string>
+	<string>Pixivel 需要访问相册以便保存图片</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>UILaunchStoryboardName</key>
-	<string></string>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>
@@ -48,6 +46,8 @@
 		<key>UIImageName</key>
 		<string>LaunchScreenImage</string>
 	</dict>
+	<key>UILaunchStoryboardName</key>
+	<string></string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>

@@ -1,4 +1,4 @@
-package dev.shugetsu.pixivel_flutter
+package dev.shugetsu.pixivel
 
 import io.flutter.embedding.android.FlutterActivity
 
