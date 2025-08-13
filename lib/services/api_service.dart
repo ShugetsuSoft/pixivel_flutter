@@ -107,7 +107,7 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
+        final json = jsonDecode(utf8.decode(response.bodyBytes));
         return BackendResponse.fromJson(
           json,
           (data) => IllustsResponse.fromJson(data as Map<String, dynamic>),
@@ -115,7 +115,7 @@ class ApiService {
       }
 
       if (response.statusCode == 500) {
-        final json = jsonDecode(response.body);
+        final json = jsonDecode(utf8.decode(response.bodyBytes));
         return BackendResponse(
           status: response.statusCode,
           message: json['message'] as String? ?? Errors.TryInFewMinutes,
@@ -141,7 +141,7 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
+        final json = jsonDecode(utf8.decode(response.bodyBytes));
         return BackendResponse.fromJson(
           json,
           (data) => Illust.fromJson(data as Map<String, dynamic>),
@@ -167,7 +167,7 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
+        final json = jsonDecode(utf8.decode(response.bodyBytes));
         return BackendResponse.fromJson(
           json,
           (data) => UserIllustsResponse.fromJson(data as Map<String, dynamic>),
@@ -175,7 +175,7 @@ class ApiService {
       }
 
       if (response.statusCode == 500) {
-        final json = jsonDecode(response.body);
+        final json = jsonDecode(utf8.decode(response.bodyBytes));
         return BackendResponse(
           status: json['status'] as int,
           message: json['message'] as String?,
@@ -207,7 +207,7 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
+        final json = jsonDecode(utf8.decode(response.bodyBytes));
         return BackendResponse.fromJson(
           json,
           (data) => Ugoira.fromJson(data as Map<String, dynamic>),
@@ -234,7 +234,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       return BackendResponse<IllustsResponse>.fromJson(
-        jsonDecode(response.body),
+        jsonDecode(utf8.decode(response.bodyBytes)),
         (json) => IllustsResponse.fromJson(json as Map<String, dynamic>),
       );
     } else {
@@ -256,7 +256,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       return BackendResponse<IllustsResponse>.fromJson(
-        jsonDecode(response.body),
+        jsonDecode(utf8.decode(response.bodyBytes)),
         (json) => IllustsResponse.fromJson(json as Map<String, dynamic>),
       );
     } else {
@@ -280,7 +280,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       return BackendResponse<IllustsResponse>.fromJson(
-        json.decode(response.body),
+        jsonDecode(utf8.decode(response.bodyBytes)),
         (json) => IllustsResponse.fromJson(json as Map<String, dynamic>),
       );
     } else {
@@ -304,7 +304,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       return BackendResponse<UsersResponse>.fromJson(
-        json.decode(response.body),
+        jsonDecode(utf8.decode(response.bodyBytes)),
         (json) => UsersResponse.fromJson(json as Map<String, dynamic>),
       );
     } else {
