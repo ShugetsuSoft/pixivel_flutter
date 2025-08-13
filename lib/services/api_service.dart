@@ -7,6 +7,21 @@ import '../models/api_response.dart';
 
 class ApiService {
   static const String _baseUrl = 'https://api.pixivel.art:443/v3';
+  static const String _sanityState = 'Normal';
+  
+  static const Map<String, String> _commonHeaders = {
+    'accept': 'application/json',
+    'origin': 'https://pixivel.art',
+    'referer': 'https://pixivel.art/',
+    'pixivel-sanity': _sanityState,
+  };
+  
+  static const Map<String, String> _extendedHeaders = {
+    'accept': 'application/json, text/plain, */*',
+    'origin': 'https://pixivel.art',
+    'referer': 'https://pixivel.art/',
+    'pixivel-sanity': _sanityState,
+  };
 
   static const Map<String, List<String>> convertList = {
     'original': ['img-original/img/', ''],
@@ -99,11 +114,7 @@ class ApiService {
       final response = await http.get(
         Uri.parse(
             '$_baseUrl/rank?mode=$mode&date=$dateFormatted&content=$content&page=$page'),
-        headers: {
-          'accept': 'application/json',
-          'origin': 'https://pixivel.art',
-          'referer': 'https://pixivel.art/',
-        },
+        headers: _commonHeaders,
       );
 
       if (response.statusCode == 200) {
@@ -133,11 +144,7 @@ class ApiService {
     try {
       final response = await http.get(
         Uri.parse('$_baseUrl/illust/$id'),
-        headers: {
-          'accept': 'application/json',
-          'origin': 'https://pixivel.art',
-          'referer': 'https://pixivel.art/',
-        },
+        headers: _commonHeaders,
       );
 
       if (response.statusCode == 200) {
@@ -159,11 +166,7 @@ class ApiService {
     try {
       final response = await http.get(
         Uri.parse('$_baseUrl/illustrator/$userId/illusts?page=$page'),
-        headers: {
-          'accept': 'application/json, text/plain, */*',
-          'origin': 'https://pixivel.art',
-          'referer': 'https://pixivel.art/',
-        },
+        headers: _extendedHeaders,
       );
 
       if (response.statusCode == 200) {
@@ -199,11 +202,7 @@ class ApiService {
     try {
       final response = await http.get(
         Uri.parse('$_baseUrl/ugoira/$id'),
-        headers: {
-          'accept': 'application/json',
-          'origin': 'https://pixivel.art',
-          'referer': 'https://pixivel.art/',
-        },
+        headers: _commonHeaders,
       );
 
       if (response.statusCode == 200) {
@@ -229,6 +228,7 @@ class ApiService {
         'Referer': 'https://pixivel.art/',
         'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'pixivel-sanity': _sanityState,
       },
     );
 
@@ -251,6 +251,7 @@ class ApiService {
         'Referer': 'https://pixivel.art/',
         'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'pixivel-sanity': _sanityState,
       },
     );
 
@@ -318,7 +319,10 @@ class ApiService {
     try {
       final response = await http.post(
         Uri.parse('$_baseUrl/report/$type/$id'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'pixivel-sanity': _sanityState,
+        },
       );
 
       if (response.statusCode == 200) {

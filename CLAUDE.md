@@ -23,6 +23,10 @@ Pixivel is a Flutter application that serves as a Pixiv client, allowing users t
 - `flutter test` - Run unit tests
 - `flutter test test/widget_test.dart` - Run specific test file
 
+### App Icon Generation
+- `flutter pub get` - Install dependencies including flutter_launcher_icons
+- `dart run flutter_launcher_icons` - Generate app icons from assets/logo.png for all platforms
+
 ## Architecture Overview
 
 ### Core Structure
