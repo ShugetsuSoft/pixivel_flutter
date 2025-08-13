@@ -311,4 +311,24 @@ class ApiService {
       throw Exception('Failed to search illustrators');
     }
   }
+
+  Future<bool> reportContent(String type, String id) async {
+    assert(type == 'illust' || type == 'user', 'Type must be either "illust" or "user"');
+    
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/report/$type/$id'),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception('Failed to report content: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint('Error reporting content: $e');
+      rethrow;
+    }
+  }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'rank_page.dart';
 import 'search_page.dart';
 import 'id_jump_page.dart';
+import 'about_page.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});
@@ -17,6 +18,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     const RankPage(),
     const SearchPage(),
     const IdJumpPage(),
+    const AboutPage(),
   ];
 
   @override
@@ -43,9 +45,9 @@ class _MainScaffoldState extends State<MainScaffold> {
             });
           },
           elevation: 0,
-          backgroundColor: Colors.black,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.grey,
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          unselectedItemColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: true,
           showUnselectedLabels: true,
@@ -69,9 +71,9 @@ class _MainScaffoldState extends State<MainScaffold> {
             BottomNavigationBarItem(
               icon: Padding(
                 padding: EdgeInsets.only(bottom: 3),
-                child: Icon(Icons.bar_chart),
+                child: Icon(Icons.trending_up),
               ),
-              label: '排行',
+              label: '排行榜',
             ),
             BottomNavigationBarItem(
               icon: Padding(
@@ -83,9 +85,16 @@ class _MainScaffoldState extends State<MainScaffold> {
             BottomNavigationBarItem(
               icon: Padding(
                 padding: EdgeInsets.only(bottom: 3),
-                child: Icon(Icons.tag),
+                child: Icon(Icons.numbers),
               ),
-              label: 'ID跳转',
+              label: '跳转',
+            ),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: EdgeInsets.only(bottom: 3),
+                child: Icon(Icons.info_outline),
+              ),
+              label: '关于',
             ),
           ],
         ),

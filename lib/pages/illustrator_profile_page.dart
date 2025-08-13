@@ -189,7 +189,7 @@ class _IllustratorProfilePageState extends State<IllustratorProfilePage> {
                                             maxScale: 4.0,
                                             child: Hero(
                                               tag:
-                                                  'background_image_${_user!.id}',
+                                                  'background_image_fullscreen_${_user!.id}',
                                               child: CachedNetworkImage(
                                                 imageUrl:
                                                     _apiService.getUserImageUrl(
