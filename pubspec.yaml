@@ -49,6 +49,8 @@ dependencies:
   shared_preferences: ^2.2.2
   package_info_plus: ^5.0.1
   google_fonts: ^6.1.0
+  archive: ^3.4.10
+  image: ^4.1.7
 
 dev_dependencies:
   flutter_test:

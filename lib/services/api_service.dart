@@ -89,6 +89,22 @@ class ApiService {
     return url;
   }
 
+  String getUgoiraZipUrl(String image, int id) {
+    final Y = image.substring(0, 4);
+    final M = image.substring(4, 6);
+    final D = image.substring(6, 8);
+    final h = image.substring(8, 10);
+    final m = image.substring(10, 12);
+    final s = image.substring(12, 14);
+
+    var url = _loadBalance(id);
+    url += 'img-zip-ugoira/img/';
+    url += '$Y/$M/$D/$h/$m/$s/';
+    url += '${id}_ugoira1920x1080.zip';
+
+    return url;
+  }
+
   String getUserImageUrl(String url, int userId) {
     return url.replaceAll("https://i.pximg.net/", _loadBalance(userId));
   }
@@ -201,12 +217,12 @@ class ApiService {
   Future<BackendResponse<Ugoira>> getUgoira(int id) async {
     try {
       final response = await http.get(
-        Uri.parse('$_baseUrl/ugoira/$id'),
+        Uri.parse('$_baseUrl/illust/$id/ugoira'),
         headers: _commonHeaders,
       );
-
       if (response.statusCode == 200) {
         final json = jsonDecode(utf8.decode(response.bodyBytes));
+        
         return BackendResponse.fromJson(
           json,
           (data) => Ugoira.fromJson(data as Map<String, dynamic>),

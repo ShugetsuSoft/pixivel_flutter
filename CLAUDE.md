@@ -98,8 +98,16 @@ The ApiService handles image URL construction with different quality levels:
 - `regular`: 1200px master quality
 - `small`: 540x540 compressed
 - `thumb_mini`: 128x128 thumbnails
+- `getUgoiraZipUrl()`: Special method for ugoira animation zip files
 
 ### Cross-Platform Considerations
 - Download functionality uses conditional exports
 - Universal platform detection for platform-specific features
 - Responsive layout considerations for different screen sizes
+
+### Ugoira (Animated Images) Support
+- **UgoiraPlayer**: Custom widget for playing animated illustrations
+- Automatically detects `illust.type == 2` and loads ugoira data via `getUgoira()` API
+- Downloads zip file containing animation frames and timing data
+- Provides play/pause controls and frame counter
+- Integrated into IllustDetailPage for seamless animated illustration viewing

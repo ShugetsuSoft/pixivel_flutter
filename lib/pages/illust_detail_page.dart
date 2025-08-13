@@ -15,8 +15,10 @@ import 'package:path/path.dart' as path;
 import 'package:universal_platform/universal_platform.dart';
 import 'package:gal/gal.dart';
 import '../models/illust.dart';
+import '../models/ugoira.dart';
 import '../services/api_service.dart';
 import '../widgets/shimmer_loading.dart';
+import '../widgets/ugoira_player.dart';
 import 'full_screen_image_viewer.dart';
 import '../models/api_response.dart';
 import 'illustrator_profile_page.dart';
@@ -51,6 +53,10 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
   bool _isLoadingUserIllusts = false;
   final ScrollController _horizontalScrollController = ScrollController();
   PageStorageBucket? _bucket;
+
+  // Ugoira related variables
+  Ugoira? _ugoira;
+  bool _isLoadingUgoira = false;
 
   // 推荐插画相关变量
   final List<Illust> _recommendIllusts = [];
@@ -553,6 +559,37 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
   }
 
   Widget _buildIllustImage({bool isWideScreen = false}) {
+    // Show ugoira player if it's an animated illustration
+    if (_illust!.type == 2 && _ugoira != null) {
+      return UgoiraPlayer(
+        ugoira: _ugoira!,
+        apiService: _apiService,
+        fit: BoxFit.contain,
+      );
+    }
+
+    // Show loading indicator for ugoira while loading
+    if (_illust!.type == 2 && _isLoadingUgoira) {
+      return Container(
+        color: const Color(0xFF1F1F1F),
+        child: const Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Loading animation...',
+                style: TextStyle(color: Colors.white70),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return _illust!.pageCount > 1
         ? Stack(
             children: [
@@ -839,6 +876,11 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
 
     if (_illust != null) {
       _loadRecommendIllusts();
+
+      // Load ugoira data if it's an animated illustration
+      if (_illust!.type == 2) {
+        _loadUgoira();
+      }
     }
   }
 
@@ -860,6 +902,11 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
         setState(() {
           _illust = response.data;
         });
+
+        // Load ugoira data if it's an animated illustration
+        if (_illust?.type == 2) {
+          _loadUgoira();
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -872,6 +919,31 @@ class _IllustDetailPageState extends State<IllustDetailPage> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _loadUgoira() async {
+    if (_isLoadingUgoira || _illust == null) return;
+
+    setState(() {
+      _isLoadingUgoira = true;
+    });
+
+    try {
+      final response = await _apiService.getUgoira(_illust!.id);
+      if (response.isSuccess && mounted) {
+        setState(() {
+          _ugoira = response.data;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading ugoira: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingUgoira = false;
+        });
+      }
     }
   }
 
