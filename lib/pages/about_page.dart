@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:universal_platform/universal_platform.dart';
+import '../services/update_service.dart';
+import '../widgets/update_dialog.dart';
 
 const _descriptionText = '''Pixivel 提供全网动漫二次元壁纸插画的查看，检索以及下载。满足你收集的需求！
 
@@ -18,6 +21,8 @@ class AboutPage extends StatefulWidget {
 
 class _AboutPageState extends State<AboutPage> {
   String _version = '';
+  final UpdateService _updateService = UpdateService();
+  bool _isCheckingUpdate = false;
 
   @override
   void initState() {
@@ -36,6 +41,64 @@ class _AboutPageState extends State<AboutPage> {
     final url = Uri.parse(urlString);
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
+    }
+  }
+
+  Future<void> _checkForUpdates() async {
+    setState(() {
+      _isCheckingUpdate = true;
+    });
+
+    try {
+      final updateInfo = await _updateService.checkForUpdates(forceCheck: true);
+      
+      if (mounted) {
+        if (updateInfo != null) {
+          UpdateDialog.show(
+            context,
+            updateInfo,
+            onSkip: () async {
+              await _updateService.skipVersion(updateInfo.version);
+            },
+            onUpdate: () async {
+              try {
+                await _updateService.downloadAndInstallUpdate(updateInfo.downloadUrl);
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to open update: ${e.toString()}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('You are using the latest version'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to check for updates: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isCheckingUpdate = false;
+        });
+      }
     }
   }
 
@@ -141,7 +204,7 @@ class _AboutPageState extends State<AboutPage> {
                             Text(
                               '版本 $_version',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.8),
+                                color: Colors.white.withValues(alpha: 0.8),
                               ),
                             ),
                           ],
@@ -185,6 +248,50 @@ class _AboutPageState extends State<AboutPage> {
                     ),
                   ),
                 ),
+                // Only show update section for non-web platforms
+                if (!UniversalPlatform.isWeb) ...[
+                  const SizedBox(height: 16),
+                  _buildInfoCard(
+                    title: '应用更新',
+                    icon: Icons.system_update,
+                    content: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '当前版本：$_version',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            height: 1.5,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: FilledButton.icon(
+                            onPressed: _isCheckingUpdate ? null : _checkForUpdates,
+                            icon: _isCheckingUpdate
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : const Icon(Icons.download, size: 18),
+                            label: Text(_isCheckingUpdate ? '检查中...' : '检查更新'),
+                            style: FilledButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ]),
             ),
           ),

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "dev.shugetsu.pixivel"
-    compileSdk 34
+    compileSdk 35
     ndkVersion = '28.0.12433566 rc1'
 
     compileOptions {

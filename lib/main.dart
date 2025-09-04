@@ -4,6 +4,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:universal_platform/universal_platform.dart';
 import 'pages/main_scaffold.dart';
+import 'services/update_service.dart';
+import 'widgets/update_dialog.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,8 +13,77 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final UpdateService _updateService = UpdateService();
+  UpdateInfo? _pendingUpdate;
+
+  @override
+  void initState() {
+    super.initState();
+    // Check for updates after app starts
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkForUpdates();
+    });
+  }
+
+  Future<void> _checkForUpdates() async {
+    try {
+      final updateInfo = await _updateService.checkForUpdates();
+      if (updateInfo != null && mounted) {
+        // Check if this version was already skipped
+        final isSkipped = await _updateService.isVersionSkipped(updateInfo.version);
+        if (!isSkipped) {
+          setState(() {
+            _pendingUpdate = updateInfo;
+          });
+          _showUpdateDialog(updateInfo);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error checking for updates: $e');
+    }
+  }
+
+  void _showUpdateDialog(UpdateInfo updateInfo) {
+    if (!mounted) return;
+    
+    UpdateDialog.show(
+      context,
+      updateInfo,
+      onSkip: () async {
+        await _updateService.skipVersion(updateInfo.version);
+        setState(() {
+          _pendingUpdate = null;
+        });
+      },
+      onUpdate: () async {
+        try {
+          await _updateService.downloadAndInstallUpdate(updateInfo.downloadUrl);
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to open update: ${e.toString()}'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      },
+      onLater: () {
+        setState(() {
+          _pendingUpdate = null;
+        });
+      },
+    );
+  }
 
   List<String> get _fontFallbacks {
     if (UniversalPlatform.isMacOS) {
