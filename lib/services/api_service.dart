@@ -1,9 +1,52 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
 import '../models/illust.dart';
 import '../models/ugoira.dart';
 import '../models/api_response.dart';
+
+String _computeHomoHeader(String a) {
+  int b = 0;
+  final c = [109, 97, 120, 105, 117, 114, 97];
+  final d = [48, 48, 48];
+  var e = List<int>.generate(7, (f) => f ^ 0xFF);
+  while (true) {
+    final g = String.fromCharCodes(c);
+    final h = '$a$b';
+    final i = h + g;
+    final j = utf8.encode(i);
+    final k = sha256.convert(j);
+    final l = k.toString();
+    final m = l.length >= 3;
+    final n = m &&
+        l.codeUnitAt(l.length - 3) == d[0];
+    final o = m &&
+        l.codeUnitAt(l.length - 2) == d[1];
+    final p = m &&
+        l.codeUnitAt(l.length - 1) == d[2];
+    final q = n && o && p;
+    if (q) {
+      final r = b.toString();
+      final s = r.codeUnits.fold<int>(0, (t, u) => t ^ u);
+      final v = s == s;
+      return v ? r : 'fallback';
+    }
+    b++;
+    if (b % 1000 == 0) {
+      final w = List<int>.generate(10, (x) => x * x * x)
+          .fold<int>(0, (y, z) => y + z);
+      e = e.map((aa) => aa ^ w).toList();
+      if (w < 0) {
+        return 'impossible';
+      }
+    }
+    if (b % 50000 == 0) {
+      final bb = e.fold<int>(0, (cc, dd) => cc + dd);
+      e = List<int>.generate(e.length, (ee) => bb % 256);
+    }
+  }
+}
 
 class ApiService {
   static const String _baseUrl = 'https://api.pixivel.art:443/v3';
@@ -50,6 +93,19 @@ class ApiService {
   };
 
   static const int pageLimit = 30;
+
+  static Future<String> _obfuscatedHeaderGeneration(String inputParam) async {
+    return await compute(_computeHomoHeader, inputParam);
+  }
+
+  static Future<Map<String, String>> _getHeadersWithHomo(Uri uri, Map<String, String> baseHeaders) async {
+    final processedInput = '${uri.path}${uri.query.isNotEmpty ? '?${uri.query}' : ''}';
+    final computedValue = await _obfuscatedHeaderGeneration(processedInput);
+    return {
+      ...baseHeaders,
+      'Homo': computedValue,
+    };
+  }
 
   String _loadBalance(int id, {int page = -1}) {
     // Simple load balancing using modulo
@@ -127,10 +183,11 @@ class ApiService {
     }
 
     try {
+      final uri = Uri.parse(
+          '$_baseUrl/rank?mode=$mode&date=$dateFormatted&content=$content&page=$page');
       final response = await http.get(
-        Uri.parse(
-            '$_baseUrl/rank?mode=$mode&date=$dateFormatted&content=$content&page=$page'),
-        headers: _commonHeaders,
+        uri,
+        headers: await _getHeadersWithHomo(uri, _commonHeaders),
       );
 
       if (response.statusCode == 200) {
@@ -158,9 +215,10 @@ class ApiService {
 
   Future<BackendResponse<Illust>> getIllustDetail(int id) async {
     try {
+      final uri = Uri.parse('$_baseUrl/illust/$id');
       final response = await http.get(
-        Uri.parse('$_baseUrl/illust/$id'),
-        headers: _commonHeaders,
+        uri,
+        headers: await _getHeadersWithHomo(uri, _commonHeaders),
       );
 
       if (response.statusCode == 200) {
@@ -180,9 +238,10 @@ class ApiService {
   Future<BackendResponse<UserIllustsResponse>> getUserIllusts(int userId,
       {int page = 0}) async {
     try {
+      final uri = Uri.parse('$_baseUrl/illustrator/$userId/illusts?page=$page');
       final response = await http.get(
-        Uri.parse('$_baseUrl/illustrator/$userId/illusts?page=$page'),
-        headers: _extendedHeaders,
+        uri,
+        headers: await _getHeadersWithHomo(uri, _extendedHeaders),
       );
 
       if (response.statusCode == 200) {
@@ -216,9 +275,10 @@ class ApiService {
 
   Future<BackendResponse<Ugoira>> getUgoira(int id) async {
     try {
+      final uri = Uri.parse('$_baseUrl/illust/$id/ugoira');
       final response = await http.get(
-        Uri.parse('$_baseUrl/illust/$id/ugoira'),
-        headers: _commonHeaders,
+        uri,
+        headers: await _getHeadersWithHomo(uri, _commonHeaders),
       );
       if (response.statusCode == 200) {
         final json = jsonDecode(utf8.decode(response.bodyBytes));
@@ -237,15 +297,16 @@ class ApiService {
 
   Future<BackendResponse<IllustsResponse>> getRankIllusts(
       String mode, String type, int page) async {
+    final uri = Uri.parse('$_baseUrl/rank/$mode/$type?page=$page');
     final response = await http.get(
-      Uri.parse('$_baseUrl/rank/$mode/$type?page=$page'),
-      headers: {
+      uri,
+      headers: await _getHeadersWithHomo(uri, {
         'Accept': 'application/json',
         'Referer': 'https://pixivel.art/',
         'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         'pixivel-sanity': _sanityState,
-      },
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -260,15 +321,16 @@ class ApiService {
 
   Future<BackendResponse<IllustsResponse>> getRecommendIllusts(
       int illustId, int page) async {
+    final uri = Uri.parse('$_baseUrl/illust/$illustId/recommend?page=$page');
     final response = await http.get(
-      Uri.parse('$_baseUrl/illust/$illustId/recommend?page=$page'),
-      headers: {
+      uri,
+      headers: await _getHeadersWithHomo(uri, {
         'Accept': 'application/json',
         'Referer': 'https://pixivel.art/',
         'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
         'pixivel-sanity': _sanityState,
-      },
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -284,15 +346,16 @@ class ApiService {
   Future<BackendResponse<IllustsResponse>> searchIllusts(String query,
       {int page = 0, String sort = 'relevant'}) async {
     final encodedQuery = Uri.encodeComponent(query);
+    final uri = Uri.parse('$_baseUrl/search/illust/$encodedQuery?page=$page&sort=$sort');
     final response = await http.get(
-      Uri.parse('$_baseUrl/search/illust/$encodedQuery?page=$page&sort=$sort'),
-      headers: {
+      uri,
+      headers: await _getHeadersWithHomo(uri, {
         'accept': 'application/json',
         'accept-language': 'zh-CN,zh;q=0.9',
         'referer': 'https://pixivel.art/',
         'user-agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-      },
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -308,15 +371,16 @@ class ApiService {
   Future<BackendResponse<UsersResponse>> searchIllustrators(String query,
       {int page = 0}) async {
     final encodedQuery = Uri.encodeComponent(query);
+    final uri = Uri.parse('$_baseUrl/search/illustrator/$encodedQuery?page=$page');
     final response = await http.get(
-      Uri.parse('$_baseUrl/search/illustrator/$encodedQuery?page=$page'),
-      headers: {
+      uri,
+      headers: await _getHeadersWithHomo(uri, {
         'accept': 'application/json',
         'accept-language': 'zh-CN,zh;q=0.9',
         'referer': 'https://pixivel.art/',
         'user-agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-      },
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -331,14 +395,15 @@ class ApiService {
 
   Future<bool> reportContent(String type, String id) async {
     assert(type == 'illust' || type == 'user', 'Type must be either "illust" or "user"');
-    
+
     try {
+      final uri = Uri.parse('$_baseUrl/report/$type/$id');
       final response = await http.post(
-        Uri.parse('$_baseUrl/report/$type/$id'),
-        headers: {
+        uri,
+        headers: await _getHeadersWithHomo(uri, {
           'Content-Type': 'application/json',
           'pixivel-sanity': _sanityState,
-        },
+        }),
       );
 
       if (response.statusCode == 200) {
